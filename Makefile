@@ -51,8 +51,11 @@ define Package/i2pd/install
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/i2pd $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/libi2pd.a $(1)/usr/bin
 	$(INSTALL_BIN) $(PKG_BUILD_DIR)/libi2pdclient.a $(1)/usr/bin
-	$(INSTALL_DIR) $(1)/opt/etc/init.d
 	$(INSTALL_DIR) $(1)/usr/lib
+	$(INSTALL_DIR) $(1)/etc/init.d
+	$(INSTALL_BIN) ./files/i2pd.init $(1)/etc/init.d/i2pd
+	$(INSTALL_DIR) $(1)/etc/config
+	$(INSTALL_CONF) ./files/i2pd.config $(1)/etc/config/i2pd
 endef
 
 $(eval $(call BuildPackage,i2pd))
