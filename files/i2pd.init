@@ -1,0 +1,37 @@
+#!/bin/sh /etc/rc.common
+
+START=50
+USE_PROCD=1
+PROG=/usr/bin/i2pd
+
+i2pd_instance() {
+	local port httpaddress httpport httpproxyaddress httpproxyport socksproxyaddress socksproxyport
+
+	config_get		port				$1 'port'
+	config_get		httpaddress			$1 'httpaddress'
+	config_get		httpport			$1 'httpport'
+	config_get		httpproxyaddress	$1 'httpproxyaddress'
+	config_get		httpproxyport		$1 'httpproxyport'
+	config_get		socksproxyaddress	$1 'socksproxyaddress'
+	config_get		socksproxyport		$1 'socksproxyport'
+	
+	procd_open_instance
+	procd_set_param    command $PROG
+	procd_append_param command -port=$port
+	procd_append_param command -httpaddress=$httpaddress
+	procd_append_param command -httpport=$httpport
+	procd_append_param command -httpproxyaddress=$httpproxyaddress
+	procd_append_param command -httpproxyport=$httpproxyport 
+	procd_append_param command -socksproxyaddress=$socksproxyaddress
+	procd_append_param command -socksproxyport=$socksproxyport
+	procd_close_instance
+}
+
+start_service() {
+	config_load i2pd
+	config_foreach i2pd_instance i2pd
+}
+
+service_triggers() {
+	procd_add_reload_trigger 'i2pd'
+}
